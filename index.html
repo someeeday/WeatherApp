@@ -1,31 +1,25 @@
-<meta name="telegram-web-app" content="true">
-<meta name="telegram-web-app-url" content="https://someeeday.github.io/WeatherApp">
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Погода в Telegram</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>WeatherApp</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="weather-container">
-        <h1>Погода в вашем городе</h1>
-        
-        <!-- Кнопка для отправки местоположения -->
-        <button id="get-location-btn" class="btn">Поделиться местоположением</button>
-
-        <!-- Поле для поиска города -->
-        <input type="text" id="city-search" placeholder="Введите город" class="search-bar" />
-        
-        <!-- Контейнер для отображения погоды -->
-        <div id="weather-info" class="weather-info">
-            <p id="temperature">Температура: </p>
-            <p id="condition">Состояние: </p>
-            <p id="feelslike">Ощущается как: </p>
-            <p id="wind-speed">Скорость ветра: </p>
-            <p id="humidity">Влажность: </p>
+        <h1>WeatherApp</h1>
+        <input type="text" id="city" placeholder="Введите город..." />
+        <button onclick="getWeather()">Получить погоду</button>
+        <div id="weather-info" class="hidden">
+            <h2 id="city-name"></h2>
+            <p>Температура: <span id="temperature"></span>°C</p>
+            <p>Ощущается как: <span id="feelslike"></span>°C</p>
+            <p>Состояние: <span id="condition"></span></p>
+            <p>Скорость ветра: <span id="wind"></span> км/ч</p>
+            <p>Влажность: <span id="humidity"></span>%</p>
+            <p>Давление: <span id="pressure"></span> мб</p>
+            <p>Облачность: <span id="cloudiness"></span>%</p>
         </div>
     </div>
 
