@@ -3,36 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прогноз погоды</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Погода</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="weather-app">
-        <!-- Фон с изображением погоды -->
-        <div id="weather-background" class="background"></div>
+    <div id="weatherInfo">
+        <h2 id="temp">Температура: --°C</h2>
+        <p id="feelsLike">Ощущается как: --°C</p>
+        <p id="description">Погода: --</p>
 
-        <!-- Контейнер для погоды -->
-        <div class="weather-container">
-            <h1>Прогноз погоды</h1>
-
-            <!-- Поле для ввода города -->
-            <input type="text" id="city" placeholder="Введите город" class="city-input"/>
-            <button onclick="getWeather()">Получить погоду</button>
-
-            <button onclick="shareLocation()">Поделиться местоположением</button>
-
-            <!-- Информация о погоде -->
-            <div id="weather-info" class="weather-info hidden">
-                <h2 id="city-name"></h2>
-                <p>🌡️ Температура: <span id="temperature"></span></p>
-                <p>💨 Ощущается как: <span id="feelslike"></span></p>
-                <p>🌤️ Состояние: <span id="condition"></span></p>
-                <p>💨 Скорость ветра: <span id="wind"></span></p>
-                <p>🌬️ Влажность: <span id="humidity"></span></p>
-                <p>🌫️ Давление: <span id="pressure"></span></p>
-                <p>☁️ Облачность: <span id="cloudiness"></span></p>
-            </div>
-        </div>
+        <input type="text" id="city" placeholder="Введите город" oninput="getCities()">
+        <ul id="suggestions"></ul>
     </div>
 
     <script src="script.js"></script>

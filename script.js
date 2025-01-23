@@ -1,99 +1,24 @@
-const apiKey = 'YOUR_API_KEY'; // Замените на ваш ключ API
-const baseUrl = 'https://api.openweathermap.org/data/2.5/weather'; // URL OpenWeatherMap API
+const apiKey = '21db32bae99a47d88b8195425252301';
+const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-// Маппинг погодных состояний к изображениям фона
-const weatherBackgrounds = {
-    'Clear': 'clear-sky.jpg', // картинка для ясного неба
-    'Clouds': 'cloudy.jpg', // картинка для облачной погоды
-    'Rain': 'rainy.jpg', // картинка для дождя
-    'Snow': 'snowy.jpg', // картинка для снега
-    'Drizzle': 'drizzle.jpg', // картинка для мороси
-    'Thunderstorm': 'thunderstorm.jpg', // картинка для грозы
-    'Mist': 'mist.jpg' // картинка для тумана
-};
+function getCities() {
+    const query = document.getElementById('city').value;
+    if (query.length < 3) return; // Стартуем запрос после 3 символов
 
-// Функция для получения погоды по городу
-async function getWeather() {
-    const city = document.getElementById('city').value;
-
-    if (!city) {
-        alert('Пожалуйста, введите название города!');
-        return;
-    }
-
-    const url = `${baseUrl}?q=${city}&appid=${apiKey}&units=metric&lang=ru`;
-
-    try {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        if (data.cod === 200) {
-            // Отображаем информацию о погоде
-            document.getElementById('city-name').innerText = data.name;
-            document.getElementById('temperature').innerText = `${data.main.temp}°C`;
-            document.getElementById('feelslike').innerText = `${data.main.feels_like}°C`;
-            document.getElementById('condition').innerText = data.weather[0].description;
-            document.getElementById('wind').innerText = `${data.wind.speed} м/с`;
-            document.getElementById('humidity').innerText = `${data.main.humidity}%`;
-            document.getElementById('pressure').innerText = `${data.main.pressure} гПа`;
-            document.getElementById('cloudiness').innerText = `${data.clouds.all}%`;
-
-            // Обновляем фон в зависимости от погодных условий
-            const weatherCondition = data.weather[0].main;
-            const weatherBackground = weatherBackgrounds[weatherCondition] || 'default.jpg';
-            document.getElementById('weather-background').style.backgroundImage = `url(${weatherBackground})`;
-
-            // Показываем блок с информацией о погоде
-            document.getElementById('weather-info').classList.remove('hidden');
-        } else {
-            alert('Город не найден!');
-        }
-    } catch (error) {
-        console.error('Ошибка при получении данных погоды:', error);
-        alert('Произошла ошибка при получении данных о погоде');
-    }
+    fetch(`https://api.openweathermap.org/data/2.5/find?q=${query}&type=like&sort=population&cnt=5&appid=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+            const suggestions = data.list.map(city => `<li onclick="getWeather('${city.name}')">${city.name}, ${city.sys.country}</li>`).join('');
+            document.getElementById('suggestions').innerHTML = suggestions;
+        });
 }
 
-// Функция для получения и отображения местоположения пользователя
-function shareLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(async function(position) {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-
-            const url = `${baseUrl}?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=ru`;
-
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-
-                if (data.cod === 200) {
-                    // Отображаем информацию о погоде
-                    document.getElementById('city-name').innerText = data.name;
-                    document.getElementById('temperature').innerText = `${data.main.temp}°C`;
-                    document.getElementById('feelslike').innerText = `${data.main.feels_like}°C`;
-                    document.getElementById('condition').innerText = data.weather[0].description;
-                    document.getElementById('wind').innerText = `${data.wind.speed} м/с`;
-                    document.getElementById('humidity').innerText = `${data.main.humidity}%`;
-                    document.getElementById('pressure').innerText = `${data.main.pressure} гПа`;
-                    document.getElementById('cloudiness').innerText = `${data.clouds.all}%`;
-
-                    // Обновляем фон в зависимости от погодных условий
-                    const weatherCondition = data.weather[0].main;
-                    const weatherBackground = weatherBackgrounds[weatherCondition] || 'default.jpg';
-                    document.getElementById('weather-background').style.backgroundImage = `url(${weatherBackground})`;
-
-                    // Показываем блок с информацией о погоде
-                    document.getElementById('weather-info').classList.remove('hidden');
-                } else {
-                    alert('Не удалось получить данные о погоде');
-                }
-            } catch (error) {
-                console.error('Ошибка при получении данных погоды по местоположению:', error);
-                alert('Произошла ошибка при получении данных о погоде');
-            }
+function getWeather(city) {
+    fetch(`${baseUrl}?q=${city}&appid=${apiKey}&units=metric`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('temp').innerText = `Температура: ${data.main.temp}°C`;
+            document.getElementById('feelsLike').innerText = `Ощущается как: ${data.main.feels_like}°C`;
+            document.getElementById('description').innerText = `Погода: ${data.weather[0].description}`;
         });
-    } else {
-        alert('Геолокация не поддерживается вашим браузером');
-    }
 }
