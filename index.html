@@ -8,12 +8,15 @@
 </head>
 <body>
     <div id="weatherInfo">
-        <h2 id="temp">Температура: --°C</h2>
-        <p id="feelsLike">Ощущается как: --°C</p>
-        <p id="description">Погода: --</p>
-
-        <input type="text" id="city" placeholder="Введите город" oninput="getCities()">
-        <ul id="suggestions"></ul>
+        <div class="search-container">
+            <input type="text" id="city" placeholder="Введите город" oninput="getCities()">
+            <ul id="suggestions"></ul>
+        </div>
+        <div class="weather-data">
+            <h2 id="temp">Температура: --°C</h2>
+            <p id="feelsLike">Ощущается как: --°C</p>
+            <p id="description">Погода: --</p>
+        </div>
     </div>
 
     <script src="script.js"></script>
