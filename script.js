@@ -3,13 +3,13 @@ const baseUrl = 'https://api.openweathermap.org/data/2.5/weather'; // URL OpenWe
 
 // Маппинг погодных состояний к изображениям фона
 const weatherBackgrounds = {
-    'Clear': 'url("clear-sky.jpg")', // картинка для ясного неба
-    'Clouds': 'url("cloudy.jpg")', // картинка для облачной погоды
-    'Rain': 'url("rainy.jpg")', // картинка для дождя
-    'Snow': 'url("snowy.jpg")', // картинка для снега
-    'Drizzle': 'url("drizzle.jpg")', // картинка для мороси
-    'Thunderstorm': 'url("thunderstorm.jpg")', // картинка для грозы
-    'Mist': 'url("mist.jpg")' // картинка для тумана
+    'Clear': 'clear-sky.jpg', // картинка для ясного неба
+    'Clouds': 'cloudy.jpg', // картинка для облачной погоды
+    'Rain': 'rainy.jpg', // картинка для дождя
+    'Snow': 'snowy.jpg', // картинка для снега
+    'Drizzle': 'drizzle.jpg', // картинка для мороси
+    'Thunderstorm': 'thunderstorm.jpg', // картинка для грозы
+    'Mist': 'mist.jpg' // картинка для тумана
 };
 
 // Функция для получения погоды по городу
@@ -40,7 +40,8 @@ async function getWeather() {
 
             // Обновляем фон в зависимости от погодных условий
             const weatherCondition = data.weather[0].main;
-            document.getElementById('background-image').style.backgroundImage = weatherBackgrounds[weatherCondition] || 'url("default.jpg")';
+            const weatherBackground = weatherBackgrounds[weatherCondition] || 'default.jpg';
+            document.getElementById('weather-background').style.backgroundImage = `url(${weatherBackground})`;
 
             // Показываем блок с информацией о погоде
             document.getElementById('weather-info').classList.remove('hidden');
@@ -79,7 +80,8 @@ function shareLocation() {
 
                     // Обновляем фон в зависимости от погодных условий
                     const weatherCondition = data.weather[0].main;
-                    document.getElementById('background-image').style.backgroundImage = weatherBackgrounds[weatherCondition] || 'url("default.jpg")';
+                    const weatherBackground = weatherBackgrounds[weatherCondition] || 'default.jpg';
+                    document.getElementById('weather-background').style.backgroundImage = `url(${weatherBackground})`;
 
                     // Показываем блок с информацией о погоде
                     document.getElementById('weather-info').classList.remove('hidden');

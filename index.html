@@ -8,16 +8,20 @@
 </head>
 <body>
     <div class="weather-app">
-        <div class="background-image" id="background-image"></div>
+        <!-- Фон с изображением погоды -->
+        <div id="weather-background" class="background"></div>
 
+        <!-- Контейнер для погоды -->
         <div class="weather-container">
             <h1>Прогноз погоды</h1>
 
+            <!-- Поле для ввода города -->
             <input type="text" id="city" placeholder="Введите город" class="city-input"/>
             <button onclick="getWeather()">Получить погоду</button>
 
             <button onclick="shareLocation()">Поделиться местоположением</button>
 
+            <!-- Информация о погоде -->
             <div id="weather-info" class="weather-info hidden">
                 <h2 id="city-name"></h2>
                 <p>🌡️ Температура: <span id="temperature"></span></p>
