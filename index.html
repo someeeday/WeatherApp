@@ -1,21 +1,32 @@
+<meta name="telegram-web-app" content="true">
+<meta name="telegram-web-app-url" content="https://someeeday.github.io/WeatherApp">
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Погода</title>
+    <title>Погода в Telegram</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="weather">
-        <h1>Погода в Москве</h1>
-        <p id="temperature">Загрузка...</p>
-        <p id="feelslike">Загрузка...</p>
-        <p id="condition">Загрузка...</p>
-        <p id="wind-speed">Загрузка...</p>
-        <p id="humidity">Загрузка...</p>
-        <p id="pressure">Загрузка...</p>
-        <p id="cloudiness">Загрузка...</p>
+    <div class="weather-container">
+        <h1>Погода в вашем городе</h1>
+        
+        <!-- Кнопка для отправки местоположения -->
+        <button id="get-location-btn" class="btn">Поделиться местоположением</button>
+
+        <!-- Поле для поиска города -->
+        <input type="text" id="city-search" placeholder="Введите город" class="search-bar" />
+        
+        <!-- Контейнер для отображения погоды -->
+        <div id="weather-info" class="weather-info">
+            <p id="temperature">Температура: </p>
+            <p id="condition">Состояние: </p>
+            <p id="feelslike">Ощущается как: </p>
+            <p id="wind-speed">Скорость ветра: </p>
+            <p id="humidity">Влажность: </p>
+        </div>
     </div>
 
     <script src="script.js"></script>
