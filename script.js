@@ -5,7 +5,7 @@ const getWeather = async (city) => {
     const url = `http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${city}&lang=ru`;
 
     try {
-        const response = await fetch(url);
+        const response = await fetch(url)
         const data = await response.json();
 
         if (data.error) {
