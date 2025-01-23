@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функция для получения данных о погоде
     async function getWeather() {
         // Получаем API ключ из URL (прежде чем использовать, поместите ключ в HTML или в конфиг)
-        const API_KEY = 'YOUR_API_KEY';  // Замените на ваш ключ API
+        const API_KEY = '21db32bae99a47d88b8195425252301';  // Замените на ваш ключ API
         const CITY = 'Москва';  // Указываем нужный город
         const response = await fetch(`http://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${CITY}&lang=ru`);
         const data = await response.json();
