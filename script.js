@@ -2,7 +2,7 @@
 const apiKey = '21db32bae99a47d88b8195425252301';
 const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
-// Элементы DOM
+// Получаем элементы DOM
 const locationElement = document.getElementById('location');
 const temperatureElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('description');
@@ -11,23 +11,23 @@ const refreshButton = document.getElementById('refreshButton');
 // Функция для получения погоды по координатам
 async function getWeather(lat, lon) {
     try {
-        const url = `${baseUrl}?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`;
+        const url = `${baseUrl}?lat=${lat}&lon=${lon}&units=metric&lang=ru&appid=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
 
         if (data.cod === 200) {
-            const location = data.name;
+            const location = data.name || 'Неизвестное место';
             const temperature = Math.round(data.main.temp);
             const description = data.weather[0].description;
 
             locationElement.textContent = `📍 ${location}`;
             temperatureElement.textContent = `${temperature}°C`;
-            descriptionElement.textContent = description;
+            descriptionElement.textContent = description.charAt(0).toUpperCase() + description.slice(1);
         } else {
-            throw new Error('Не удалось получить данные о погоде');
+            throw new Error('Ошибка загрузки погоды');
         }
     } catch (error) {
-        console.error(error);
+        console.error('Ошибка получения данных:', error);
         locationElement.textContent = 'Ошибка при получении данных';
         temperatureElement.textContent = '--°C';
         descriptionElement.textContent = '--';
@@ -41,11 +41,24 @@ function getLocation() {
             (position) => {
                 const lat = position.coords.latitude;
                 const lon = position.coords.longitude;
+                console.log(`Широта: ${lat}, Долгота: ${lon}`);
                 getWeather(lat, lon);
             },
             (error) => {
-                console.error(error);
-                locationElement.textContent = 'Не удалось получить ваше местоположение';
+                console.error('Ошибка геолокации:', error);
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        locationElement.textContent = 'Разрешите доступ к местоположению';
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        locationElement.textContent = 'Местоположение недоступно';
+                        break;
+                    case error.TIMEOUT:
+                        locationElement.textContent = 'Истекло время ожидания';
+                        break;
+                    default:
+                        locationElement.textContent = 'Ошибка определения местоположения';
+                }
             }
         );
     } else {
@@ -56,6 +69,13 @@ function getLocation() {
 // Обработчик кнопки "Обновить"
 refreshButton.addEventListener('click', getLocation);
 
-// Инициализация приложения
-Telegram.WebApp.ready();
-getLocation();
+// Проверка загрузки Telegram WebApp
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.Telegram) {
+        Telegram.WebApp.ready();
+        getLocation();
+    } else {
+        console.error('Telegram WebApp не загружен');
+        locationElement.textContent = 'Ошибка загрузки Telegram WebApp';
+    }
+});
