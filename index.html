@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прогноз погоды</title>
+    <title>Погода</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="container">
+    <div class="container">
+        <h1>Погода</h1>
         <div id="greeting"></div>
-        <div id="search-container">
-            <input type="text" id="city-search" placeholder="Поиск города..." />
-            <button id="search-btn">Поиск</button>
-        </div>
-        <div id="weather-info">
-            <div id="location"></div>
-            <div id="time"></div>
+        <div id="location"></div>
+        <div id="weather">
             <div id="temperature"></div>
             <div id="description"></div>
-            <div id="favorite-container">
-                <button id="add-to-favorites">Добавить в избранное</button>
-            </div>
         </div>
-        <div id="favorites">
-            <h3>Избранные города</h3>
+        <div id="time"></div>
+
+        <div class="search-container">
+            <input type="text" id="city-search" placeholder="Введите город" />
+            <ul id="search-suggestions"></ul>
+        </div>
+
+        <button id="add-to-favorites">Добавить в избранное</button>
+
+        <div class="favorites-container">
+            <h2>Избранные города</h2>
             <ul id="favorites-list"></ul>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="scripts.js"></script>
 </body>
 </html>
