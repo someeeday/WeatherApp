@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Погода</title>
+    <title>Погода в Mini App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="weatherInfo">
-        <div class="search-container">
-            <input type="text" id="city" placeholder="Введите город" oninput="getCities()">
-            <ul id="suggestions"></ul>
+    <div class="container">
+        <h1>🌤️ Погода</h1>
+        <p id="location">Определяем ваше местоположение...</p>
+        <div id="weather">
+            <p id="temperature">--°C</p>
+            <p id="description">--</p>
         </div>
-        <div class="weather-data">
-            <h2 id="temp">Температура: --°C</h2>
-            <p id="feelsLike">Ощущается как: --°C</p>
-            <p id="description">Погода: --</p>
-        </div>
+        <button id="refreshButton">Обновить</button>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
