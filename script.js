@@ -74,10 +74,17 @@ function getLocation() {
 
 // Функция для получения подсказок по городам
 async function getCitySuggestions(query) {
+    if (query.length < 3) {
+        searchSuggestions.innerHTML = ''; // Очистить подсказки, если меньше 3 символов
+        searchSuggestions.style.display = 'none';
+        return;
+    }
+
     try {
         const url = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${query}`;
         const response = await fetch(url);
         const data = await response.json();
+
         searchSuggestions.innerHTML = ''; // Очищаем старые подсказки
 
         if (data.length > 0) {
@@ -88,6 +95,7 @@ async function getCitySuggestions(query) {
                 li.addEventListener('click', () => {
                     getWeatherByCity(item.name);
                     searchSuggestions.innerHTML = ''; // Очищаем подсказки после выбора
+                    searchSuggestions.style.display = 'none';
                 });
                 searchSuggestions.appendChild(li);
             });
@@ -143,18 +151,9 @@ function updateFavoritesList() {
 }
 
 // Обработчик ввода в поле поиска
-let debounceTimer;
 searchInput.addEventListener('input', () => {
     const query = searchInput.value;
-    if (query.length >= 3) {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-            getCitySuggestions(query);
-        }, 500); // Добавляем задержку для запроса
-    } else {
-        searchSuggestions.innerHTML = '';
-        searchSuggestions.style.display = 'none';
-    }
+    getCitySuggestions(query);
 });
 
 // Инициализация
