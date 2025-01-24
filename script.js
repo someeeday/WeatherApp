@@ -4,15 +4,16 @@ const baseUrl = 'https://api.weatherapi.com/v1/current.json';
 const locationElement = document.getElementById('location');
 const temperatureElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('description');
+const feelsLikeElement = document.getElementById('feels-like'); // Ощущаемая температура
 const timeElement = document.getElementById('time');
 const greetingElement = document.getElementById('greeting');
 const searchInput = document.getElementById('city-search');
-const searchBtn = document.getElementById('search-btn'); // Кнопка поиска
+const searchBtn = document.getElementById('search-btn');
 const searchSuggestions = document.getElementById('search-suggestions');
 const favoriteButton = document.getElementById('add-to-favorites');
 const favoritesList = document.getElementById('favorites-list');
 
-let isManualCitySelected = false; // Флаг для отслеживания ручного выбора города
+let isManualCitySelected = false;
 
 // Функция для получения времени суток и приветствия
 function getGreeting() {
@@ -26,7 +27,7 @@ function getGreeting() {
         greeting = 'Добрый вечер';
     }
     greetingElement.textContent = greeting;
-    greetingElement.style.opacity = 1; // Для плавного появления
+    greetingElement.style.opacity = 1;
 }
 
 // Функция для отображения времени
@@ -38,7 +39,7 @@ function updateTime() {
 
 // Функция для получения погоды по координатам
 async function getWeather(lat, lon) {
-    if (isManualCitySelected) return; // Если город выбран вручную, игнорируем запрос по местоположению
+    if (isManualCitySelected) return;
 
     try {
         const url = `${baseUrl}?key=${apiKey}&q=${lat},${lon}&lang=ru`;
@@ -54,6 +55,7 @@ async function getWeather(lat, lon) {
             locationElement.textContent = `📍 ${data.location.name}`;
             temperatureElement.textContent = `${Math.round(data.current.temp_c)}°C`;
             descriptionElement.textContent = data.current.condition.text;
+            feelsLikeElement.textContent = `Ощущается как: ${Math.round(data.current.feelslike_c)}°C`; // Ощущаемая температура
         } else {
             alert('Ошибка при получении данных о погоде');
         }
@@ -85,7 +87,7 @@ function getLocation() {
 // Функция для получения подсказок по городам
 async function getCitySuggestions(query) {
     if (!query || query.length < 3) {
-        searchSuggestions.innerHTML = ''; // Очистить подсказки, если меньше 3 символов
+        searchSuggestions.innerHTML = '';
         searchSuggestions.style.display = 'none';
         return;
     }
@@ -100,7 +102,7 @@ async function getCitySuggestions(query) {
             return;
         }
 
-        searchSuggestions.innerHTML = ''; // Очищаем старые подсказки
+        searchSuggestions.innerHTML = '';
 
         if (data.length > 0) {
             searchSuggestions.style.display = 'block';
@@ -108,9 +110,9 @@ async function getCitySuggestions(query) {
                 const li = document.createElement('li');
                 li.textContent = item.name;
                 li.addEventListener('click', () => {
-                    searchInput.value = ''; // Очищаем поле ввода
+                    searchInput.value = '';
                     getWeatherByCity(item.name);
-                    searchSuggestions.innerHTML = ''; // Очищаем подсказки после выбора
+                    searchSuggestions.innerHTML = '';
                     searchSuggestions.style.display = 'none';
                 });
                 searchSuggestions.appendChild(li);
@@ -139,7 +141,8 @@ async function getWeatherByCity(city) {
             locationElement.textContent = `📍 ${data.location.name}`;
             temperatureElement.textContent = `${Math.round(data.current.temp_c)}°C`;
             descriptionElement.textContent = data.current.condition.text;
-            isManualCitySelected = true; // Устанавливаем флаг, что город выбран вручную
+            feelsLikeElement.textContent = `Ощущается как: ${Math.round(data.current.feelslike_c)}°C`; // Ощущаемая температура
+            isManualCitySelected = true;
         } else {
             alert('Город не найден');
         }
@@ -157,7 +160,17 @@ function addToFavorites() {
         favorites.push(city);
         localStorage.setItem('favorites', JSON.stringify(favorites));
         updateFavoritesList();
+    } else {
+        alert('Город уже в избранном');
     }
+}
+
+// Функция для удаления города из избранного
+function removeFromFavorites(city) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favorites = favorites.filter(fav => fav !== city);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    updateFavoritesList();
 }
 
 // Функция для обновления списка избранных городов
@@ -167,9 +180,20 @@ function updateFavoritesList() {
     favorites.forEach(city => {
         const listItem = document.createElement('li');
         listItem.textContent = city;
-        listItem.addEventListener('click', () => {
-            getWeatherByCity(city); // При выборе города из избранного обновляем погоду
+
+        const removeButton = document.createElement('button');
+        removeButton.textContent = 'Удалить';
+        removeButton.classList.add('remove-favorite');
+        removeButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Предотвращаем всплытие события
+            removeFromFavorites(city);
         });
+
+        listItem.addEventListener('click', () => {
+            getWeatherByCity(city);
+        });
+
+        listItem.appendChild(removeButton);
         favoritesList.appendChild(listItem);
     });
 }
@@ -188,12 +212,15 @@ searchBtn.addEventListener('click', () => {
     }
 });
 
+// Обработчик для кнопки "Добавить в избранное"
+favoriteButton.addEventListener('click', addToFavorites);
+
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
     getGreeting();
     updateTime();
     setInterval(updateTime, 1000);
     updateFavoritesList();
-    getLocation(); // Получаем погоду для текущего местоположения
-    document.body.classList.add('loaded'); // Для плавного появления
+    getLocation();
+    document.body.classList.add('loaded');
 });

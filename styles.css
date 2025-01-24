@@ -38,7 +38,7 @@ body {
 
 #search-container {
     margin-bottom: 20px;
-    position: relative; /* Для позиционирования подсказок */
+    position: relative;
 }
 
 #city-search {
@@ -74,7 +74,7 @@ body {
     border-radius: 5px;
     max-height: 150px;
     overflow-y: auto;
-    display: none; /* Скрываем по умолчанию */
+    display: none;
     z-index: 10;
 }
 
@@ -110,6 +110,12 @@ body {
 
 #description {
     font-size: 20px;
+    margin-top: 10px;
+}
+
+#feels-like {
+    font-size: 18px;
+    color: #666;
     margin-top: 10px;
 }
 
@@ -169,4 +175,18 @@ body {
     background-color: #e0e0e0;
     transform: scale(1.05);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.remove-favorite {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.remove-favorite:hover {
+    background-color: #cc0000;
 }
