@@ -40,6 +40,11 @@ async function getWeather(lat, lon) {
         const response = await fetch(url);
         const data = await response.json();
 
+        if (data.error) {
+            alert(data.error.message);
+            return;
+        }
+
         if (data && data.current) {
             locationElement.textContent = `📍 ${data.location.name}`;
             temperatureElement.textContent = `${Math.round(data.current.temp_c)}°C`;
@@ -74,7 +79,7 @@ function getLocation() {
 
 // Функция для получения подсказок по городам
 async function getCitySuggestions(query) {
-    if (query.length < 3) {
+    if (!query || query.length < 3) {
         searchSuggestions.innerHTML = ''; // Очистить подсказки, если меньше 3 символов
         searchSuggestions.style.display = 'none';
         return;
@@ -85,6 +90,11 @@ async function getCitySuggestions(query) {
         const response = await fetch(url);
         const data = await response.json();
 
+        if (data.error) {
+            alert(data.error.message);
+            return;
+        }
+
         searchSuggestions.innerHTML = ''; // Очищаем старые подсказки
 
         if (data.length > 0) {
@@ -93,6 +103,7 @@ async function getCitySuggestions(query) {
                 const li = document.createElement('li');
                 li.textContent = item.name;
                 li.addEventListener('click', () => {
+                    searchInput.value = ''; // Очищаем поле ввода
                     getWeatherByCity(item.name);
                     searchSuggestions.innerHTML = ''; // Очищаем подсказки после выбора
                     searchSuggestions.style.display = 'none';
@@ -113,6 +124,11 @@ async function getWeatherByCity(city) {
         const url = `${baseUrl}?key=${apiKey}&q=${city}&lang=ru`;
         const response = await fetch(url);
         const data = await response.json();
+
+        if (data.error) {
+            alert(data.error.message);
+            return;
+        }
 
         if (data && data.current) {
             locationElement.textContent = `📍 ${data.location.name}`;
@@ -152,7 +168,7 @@ function updateFavoritesList() {
 
 // Обработчик ввода в поле поиска
 searchInput.addEventListener('input', () => {
-    const query = searchInput.value;
+    const query = searchInput.value.trim();
     getCitySuggestions(query);
 });
 
