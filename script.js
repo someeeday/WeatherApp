@@ -12,7 +12,7 @@ const refreshButton = document.getElementById('refreshButton');
 async function getWeather(lat, lon) {
     try {
         const url = `${baseUrl}?key=${apiKey}&q=${lat},${lon}&lang=ru`;
-        console.log(`Запрос: ${url}`);
+        console.log(`Запрос отправлен: ${url}`);
 
         const response = await fetch(url);
         const data = await response.json();
