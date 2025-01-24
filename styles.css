@@ -85,6 +85,26 @@ body {
 
 #favorite-container {
     margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+#add-to-favorites {
+    padding: 12px 25px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#add-to-favorites:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 #favorites {
@@ -100,6 +120,17 @@ body {
     overflow-y: auto;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#add-to-favorites:active {
+    background-color: #004085;
+    transform: translateY(1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+#add-to-favorites:focus {
+    outline: none;
+    border: 2px solid #ff9800;
 }
 
 #favorites-list li {
