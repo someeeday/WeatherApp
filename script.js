@@ -1,6 +1,6 @@
-// API ключ и базовый URL
+// API ключ и базовый URL для WeatherAPI
 const apiKey = '21db32bae99a47d88b8195425252301';
-const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+const baseUrl = 'https://api.weatherapi.com/v1/current.json';
 
 // Получаем элементы DOM
 const locationElement = document.getElementById('location');
@@ -11,20 +11,22 @@ const refreshButton = document.getElementById('refreshButton');
 // Функция для получения погоды по координатам
 async function getWeather(lat, lon) {
     try {
-        const url = `${baseUrl}?lat=${lat}&lon=${lon}&units=metric&lang=ru&appid=${apiKey}`;
+        const url = `${baseUrl}?key=${apiKey}&q=${lat},${lon}&lang=ru`;
+        console.log(`Запрос: ${url}`);
+
         const response = await fetch(url);
         const data = await response.json();
 
-        if (data.cod === 200) {
-            const location = data.name || 'Неизвестное место';
-            const temperature = Math.round(data.main.temp);
-            const description = data.weather[0].description;
+        if (response.ok) {
+            const location = data.location.name || 'Неизвестное место';
+            const temperature = Math.round(data.current.temp_c);
+            const description = data.current.condition.text;
 
             locationElement.textContent = `📍 ${location}`;
             temperatureElement.textContent = `${temperature}°C`;
             descriptionElement.textContent = description.charAt(0).toUpperCase() + description.slice(1);
         } else {
-            throw new Error('Ошибка загрузки погоды');
+            throw new Error(`Ошибка API: ${data.error.message}`);
         }
     } catch (error) {
         console.error('Ошибка получения данных:', error);

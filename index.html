@@ -3,18 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Погода</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <title>Погода в Mini App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="weatherContainer">
-        <h1 id="location">Определяем местоположение...</h1>
-        <h2 id="temperature">--°C</h2>
-        <p id="description">--</p>
-        <button id="refreshButton">🔄 Обновить</button>
+    <div class="container">
+        <h1>🌤️ Погода</h1>
+        <p id="location">Определяем ваше местоположение...</p>
+        <div id="weather">
+            <p id="temperature">--°C</p>
+            <p id="description">--</p>
+        </div>
+        <button id="refreshButton">Обновить</button>
     </div>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
