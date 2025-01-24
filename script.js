@@ -7,6 +7,7 @@ const descriptionElement = document.getElementById('description');
 const timeElement = document.getElementById('time');
 const greetingElement = document.getElementById('greeting');
 const searchInput = document.getElementById('city-search');
+const searchBtn = document.getElementById('search-btn'); // Кнопка поиска
 const searchSuggestions = document.getElementById('search-suggestions');
 const favoriteButton = document.getElementById('add-to-favorites');
 const favoritesList = document.getElementById('favorites-list');
@@ -177,6 +178,14 @@ function updateFavoritesList() {
 searchInput.addEventListener('input', () => {
     const query = searchInput.value.trim();
     getCitySuggestions(query);
+});
+
+// Обработчик для кнопки поиска
+searchBtn.addEventListener('click', () => {
+    const query = searchInput.value.trim();
+    if (query) {
+        getWeatherByCity(query);
+    }
 });
 
 // Инициализация
