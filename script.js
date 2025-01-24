@@ -11,6 +11,8 @@ const searchSuggestions = document.getElementById('search-suggestions');
 const favoriteButton = document.getElementById('add-to-favorites');
 const favoritesList = document.getElementById('favorites-list');
 
+let isManualCitySelected = false; // Флаг для отслеживания ручного выбора города
+
 // Функция для получения времени суток и приветствия
 function getGreeting() {
     const hours = new Date().getHours();
@@ -35,6 +37,8 @@ function updateTime() {
 
 // Функция для получения погоды по координатам
 async function getWeather(lat, lon) {
+    if (isManualCitySelected) return; // Если город выбран вручную, игнорируем запрос по местоположению
+
     try {
         const url = `${baseUrl}?key=${apiKey}&q=${lat},${lon}&lang=ru`;
         const response = await fetch(url);
@@ -134,6 +138,7 @@ async function getWeatherByCity(city) {
             locationElement.textContent = `📍 ${data.location.name}`;
             temperatureElement.textContent = `${Math.round(data.current.temp_c)}°C`;
             descriptionElement.textContent = data.current.condition.text;
+            isManualCitySelected = true; // Устанавливаем флаг, что город выбран вручную
         } else {
             alert('Город не найден');
         }
@@ -161,7 +166,9 @@ function updateFavoritesList() {
     favorites.forEach(city => {
         const listItem = document.createElement('li');
         listItem.textContent = city;
-        listItem.addEventListener('click', () => getWeatherByCity(city));
+        listItem.addEventListener('click', () => {
+            getWeatherByCity(city); // При выборе города из избранного обновляем погоду
+        });
         favoritesList.appendChild(listItem);
     });
 }
@@ -178,6 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
     updateTime();
     setInterval(updateTime, 1000);
     updateFavoritesList();
-    getLocation();  // Получаем погоду для текущего местоположения
+    getLocation(); // Получаем погоду для текущего местоположения
     document.body.classList.add('loaded'); // Для плавного появления
 });
