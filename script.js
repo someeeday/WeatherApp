@@ -1,83 +1,89 @@
-// API ключ и базовый URL для WeatherAPI
 const apiKey = '21db32bae99a47d88b8195425252301';
 const baseUrl = 'https://api.weatherapi.com/v1/current.json';
 
-// Получаем элементы DOM
 const locationElement = document.getElementById('location');
 const temperatureElement = document.getElementById('temperature');
 const descriptionElement = document.getElementById('description');
-const refreshButton = document.getElementById('refreshButton');
+const timeElement = document.getElementById('time');
+const greetingElement = document.getElementById('greeting');
+const searchInput = document.getElementById('city-search');
+const searchButton = document.getElementById('search-btn');
+const favoriteButton = document.getElementById('add-to-favorites');
+const favoritesList = document.getElementById('favorites-list');
 
-// Функция для получения погоды по координатам
-async function getWeather(lat, lon) {
+// Функция для получения времени суток и приветствия
+function getGreeting() {
+    const hours = new Date().getHours();
+    let greeting = '';
+    if (hours >= 6 && hours < 12) {
+        greeting = 'Доброе утро';
+    } else if (hours >= 12 && hours < 18) {
+        greeting = 'Добрый день';
+    } else {
+        greeting = 'Добрый вечер';
+    }
+    greetingElement.textContent = greeting;
+    greetingElement.style.opacity = 1;
+}
+
+// Функция для отображения времени
+function updateTime() {
+    const now = new Date();
+    const time = now.toLocaleTimeString();
+    timeElement.textContent = `Текущее время: ${time}`;
+}
+
+// Функция для получения погоды по названию города
+async function getWeather(city) {
     try {
-        const url = `${baseUrl}?key=${apiKey}&q=${lat},${lon}&lang=ru`;
-        console.log(`Запрос отправлен: ${url}`);
-
+        const url = `${baseUrl}?key=${apiKey}&q=${city}&lang=ru`;
         const response = await fetch(url);
         const data = await response.json();
 
-        if (response.ok) {
-            const location = data.location.name || 'Неизвестное место';
-            const temperature = Math.round(data.current.temp_c);
-            const description = data.current.condition.text;
-
-            locationElement.textContent = `📍 ${location}`;
-            temperatureElement.textContent = `${temperature}°C`;
-            descriptionElement.textContent = description.charAt(0).toUpperCase() + description.slice(1);
+        if (data && data.current) {
+            locationElement.textContent = `📍 ${data.location.name}`;
+            temperatureElement.textContent = `${Math.round(data.current.temp_c)}°C`;
+            descriptionElement.textContent = data.current.condition.text;
         } else {
-            throw new Error(`Ошибка API: ${data.error.message}`);
+            alert('Город не найден');
         }
     } catch (error) {
         console.error('Ошибка получения данных:', error);
-        locationElement.textContent = 'Ошибка при получении данных';
-        temperatureElement.textContent = '--°C';
-        descriptionElement.textContent = '--';
+        alert('Ошибка при получении данных о погоде');
     }
 }
 
-// Функция для получения геолокации
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const lat = position.coords.latitude;
-                const lon = position.coords.longitude;
-                console.log(`Широта: ${lat}, Долгота: ${lon}`);
-                getWeather(lat, lon);
-            },
-            (error) => {
-                console.error('Ошибка геолокации:', error);
-                switch (error.code) {
-                    case error.PERMISSION_DENIED:
-                        locationElement.textContent = 'Разрешите доступ к местоположению';
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        locationElement.textContent = 'Местоположение недоступно';
-                        break;
-                    case error.TIMEOUT:
-                        locationElement.textContent = 'Истекло время ожидания';
-                        break;
-                    default:
-                        locationElement.textContent = 'Ошибка определения местоположения';
-                }
-            }
-        );
-    } else {
-        locationElement.textContent = 'Геолокация не поддерживается вашим браузером';
+// Функция для добавления города в избранное
+function addToFavorites() {
+    const city = locationElement.textContent.replace('📍 ', '');
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    if (!favorites.includes(city)) {
+        favorites.push(city);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        updateFavoritesList();
     }
 }
 
-// Обработчик кнопки "Обновить"
-refreshButton.addEventListener('click', getLocation);
+// Функция для обновления списка избранных городов
+function updateFavoritesList() {
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favoritesList.innerHTML = '';
+    favorites.forEach(city => {
+        const listItem = document.createElement('li');
+        listItem.textContent = city;
+        listItem.addEventListener('click', () => getWeather(city));
+        favoritesList.appendChild(listItem);
+    });
+}
 
-// Проверка загрузки Telegram WebApp
+// Обработчики событий
+searchButton.addEventListener('click', () => getWeather(searchInput.value));
+favoriteButton.addEventListener('click', addToFavorites);
+
+// Инициализация
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.Telegram) {
-        Telegram.WebApp.ready();
-        getLocation();
-    } else {
-        console.error('Telegram WebApp не загружен');
-        locationElement.textContent = 'Ошибка загрузки Telegram WebApp';
-    }
+    getGreeting();
+    updateTime();
+    setInterval(updateTime, 1000);
+    updateFavoritesList();
 });
