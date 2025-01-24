@@ -128,11 +128,6 @@ body {
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
-#add-to-favorites:focus {
-    outline: none;
-    border: 2px solid #ff9800;
-}
-
 #favorites-list li {
     margin: 5px 0;
     padding: 10px;
@@ -156,21 +151,6 @@ body {
     transform: scale(0.98);
 }
 
-#favorites-list li .remove-favorite {
-    background-color: #ff5555;
-    color: white;
-    padding: 5px;
-    border-radius: 50%;
-    font-size: 14px;
-    cursor: pointer;
-    display: none;
-    transition: background-color 0.2s ease;
-}
-
 #favorites-list li:hover .remove-favorite {
     display: block;
-}
-
-#favorites-list li .remove-favorite:hover {
-    background-color: #ff3333;
 }

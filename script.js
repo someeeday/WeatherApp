@@ -78,13 +78,22 @@ async function getCitySuggestions(query) {
         const url = `https://api.weatherapi.com/v1/search.json?key=${apiKey}&q=${query}`;
         const response = await fetch(url);
         const data = await response.json();
-        searchSuggestions.innerHTML = '';
-        data.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item.name;
-            li.addEventListener('click', () => getWeatherByCity(item.name));
-            searchSuggestions.appendChild(li);
-        });
+        searchSuggestions.innerHTML = ''; // Очищаем старые подсказки
+
+        if (data.length > 0) {
+            searchSuggestions.style.display = 'block';
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item.name;
+                li.addEventListener('click', () => {
+                    getWeatherByCity(item.name);
+                    searchSuggestions.innerHTML = ''; // Очищаем подсказки после выбора
+                });
+                searchSuggestions.appendChild(li);
+            });
+        } else {
+            searchSuggestions.style.display = 'none';
+        }
     } catch (error) {
         console.error('Ошибка получения подсказок:', error);
     }
@@ -134,12 +143,17 @@ function updateFavoritesList() {
 }
 
 // Обработчик ввода в поле поиска
+let debounceTimer;
 searchInput.addEventListener('input', () => {
     const query = searchInput.value;
     if (query.length >= 3) {
-        getCitySuggestions(query);
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            getCitySuggestions(query);
+        }, 500); // Добавляем задержку для запроса
     } else {
         searchSuggestions.innerHTML = '';
+        searchSuggestions.style.display = 'none';
     }
 });
 
